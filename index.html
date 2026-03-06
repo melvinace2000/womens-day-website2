@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Women's Day</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Poppins, sans-serif;
+background:linear-gradient(120deg,#ff4f8b,#c084fc,#ffd6e7);
+background-size:300% 300%;
+animation:bgMove 12s infinite alternate;
+color:white;
+overflow-x:hidden;
+}
+
+@keyframes bgMove{0%{background-position:left}100%{background-position:right}}
+
+.hero{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px
+}
+
+.hero h1{
+font-size:clamp(2.5rem,6vw,4rem);
+opacity:0;
+transform:translateY(40px);
+animation:textReveal 1.5s forwards
+}
+
+.hero p{
+margin-top:15px;
+font-size:clamp(1rem,2.5vw,1.3rem);
+max-width:700px;
+opacity:0;
+animation:textReveal 1.5s .6s forwards
+}
+
+@keyframes textReveal{
+to{opacity:1;transform:translateY(0)}
+}
+
+.btn{
+margin-top:30px;
+padding:14px 38px;
+border:none;
+border-radius:40px;
+font-size:18px;
+background:white;
+color:#ff4f8b;
+cursor:pointer;
+transition:.4s
+}
+
+.btn:hover{transform:scale(1.1)}
+
+.section{
+padding:100px 8%;
+text-align:center
+}
+
+.scroll{
+opacity:0;
+transform:translateY(80px) scale(.95);
+transition:1s cubic-bezier(.19,1,.22,1)
+}
+
+.scroll.show{
+opacity:1;
+transform:translateY(0) scale(1)
+}
+
+.masonry{column-count:3;column-gap:25px;margin-top:40px}
+
+.masonryItem{
+break-inside:avoid;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(10px);
+border-radius:18px;
+padding:12px;
+margin-bottom:25px;
+transition:.4s;
+text-align:left
+}
+
+.masonryItem img{width:100%;border-radius:12px;margin-bottom:10px;transition:transform .7s ease, filter .7s ease}
+
+/* cinematic hover zoom */
+.masonryItem:hover img{transform:scale(1.15);filter:brightness(1.1) saturate(1.2)}
+
+.masonryItem:hover{transform:translateY(-10px) scale(1.04);box-shadow:0 20px 40px rgba(0,0,0,.35)}
+
+/* achievement badge */
+.masonryItem::after{
+content:"🏆 Legend";
+position:absolute;
+top:12px;
+left:12px;
+background:linear-gradient(45deg,#ff4f8b,#ffd700);
+color:white;
+padding:6px 10px;
+font-size:12px;
+border-radius:12px;
+opacity:0;
+transform:translateY(-10px);
+transition:.4s;
+}
+
+.masonryItem:hover::after{opacity:1;transform:translateY(0)}
+
+/* flower particle effect */
+.masonryItem::before{
+content:"🌸 🌺 🌸";
+position:absolute;
+right:10px;
+bottom:10px;
+font-size:18px;
+opacity:0;
+transform:translateY(10px);
+transition:.4s;
+}
+
+.masonryItem:hover::before{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){.masonry{column-count:2}}
+@media(max-width:600px){.masonry{column-count:1}}
+
+.slide{display:none}
+.slide.active{display:block}
+
+.galleryCard{
+max-width:420px;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(10px);
+border-radius:20px;
+overflow:hidden;
+transition:.5s
+}
+
+.galleryCard img{width:100%;display:block}
+.galleryCard:hover{transform:scale(1.05)}
+
+.galleryContent{padding:20px}
+.galleryContent h3{margin-bottom:10px}
+
+.quoteBox{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+background:white;
+color:#ff4f8b;
+padding:40px;
+border-radius:20px;
+max-width:500px;
+text-align:center;
+font-size:22px;
+box-shadow:0 20px 60px rgba(0,0,0,.3);
+transition:.4s;
+z-index:5
+}
+
+.quoteBox.show{transform:translate(-50%,-50%) scale(1)}
+
+.closeBtn{
+margin-top:20px;
+padding:10px 25px;
+border:none;
+background:#ff4f8b;
+color:white;
+border-radius:20px;
+cursor:pointer
+}
+
+.petal{
+position:fixed;
+top:-10px;
+width:14px;height:14px;
+background:#ff6fa5;
+border-radius:70% 30% 70% 30%;
+animation:fall linear infinite
+}
+
+@keyframes fall{0%{transform:translateY(-10vh) rotate(0)}100%{transform:translateY(110vh) rotate(360deg)}}
+
+.tricolor{height:6px;width:100%;background:linear-gradient(90deg,orange,white,green)}
+
+.rangoli{
+position:fixed;
+bottom:20px;
+left:20px;
+font-size:50px;
+animation:rangoliSpin 8s linear infinite
+}
+
+@keyframes rangoliSpin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+
+.lotus{position:fixed;bottom:20px;right:20px;font-size:40px}
+
+@media(max-width:768px){
+.section{padding:60px 20px}
+.galleryCard{max-width:90vw}
+.hero{padding:30px}
+}
+
+canvas#fireworks{
+position:fixed;
+top:0;left:0;
+pointer-events:none;
+z-index:2
+}
+
+#flower3d{
+position:fixed;
+top:0;left:0;
+z-index:-1
+}
+
+footer{padding:30px;text-align:center;background:rgba(0,0,0,.2);margin-top:60px}
+
+</style>
+</head>
+<body>
+
+<div class="tricolor"></div>
+<div id="flower3d"></div>
+<canvas id="fireworks"></canvas>
+
+<div class="hero">
+<h1>Happy Women's Day</h1>
+<p>Celebrating the courage, achievements and spirit of great women across India and the world.</p>
+<button class="btn" onclick="celebrate()">Click Here</button>
+</div>
+
+<div class="section scroll">
+<h2>Inspiring Women</h2>
+<p>From leaders and scientists to teachers and sanitation workers — women shape our world.</p>
+</div>
+
+<div class="section scroll">
+<h2>Great Indian Women</h2>
+
+<div class="masonry">
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Kalpana_Chawla.jpg/640px-Kalpana_Chawla.jpg" alt="Kalpana Chawla">
+<h3>Kalpana Chawla 🚀</h3>
+<p>First Indian-born woman astronaut to travel to space.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Indira_Gandhi_1977.jpg/640px-Indira_Gandhi_1977.jpg" alt="Indira Gandhi">
+<h3>Indira Gandhi 🇮🇳</h3>
+<p>First female Prime Minister of India.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Kiran_Bedi.jpg/640px-Kiran_Bedi.jpg" alt="Kiran Bedi">
+<h3>Kiran Bedi 👮‍♀️</h3>
+<p>India's first woman IPS officer.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Savitribai_Phule.jpg/640px-Savitribai_Phule.jpg" alt="Savitribai Phule">
+<h3>Savitribai Phule 📚</h3>
+<p>Pioneer of women's education in India.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Sudha_Murthy.jpg/640px-Sudha_Murthy.jpg" alt="Sudha Murty">
+<h3>Sudha Murty 💡</h3>
+<p>Author, philanthropist and social reformer.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Rani_Lakshmibai_of_Jhansi.jpg/640px-Rani_Lakshmibai_of_Jhansi.jpg" alt="Rani Lakshmibai">
+<h3>Rani Lakshmibai ⚔️</h3>
+<p>Queen of Jhansi and leader in the 1857 revolt.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Mary_Kom_2011.jpg/640px-Mary_Kom_2011.jpg" alt="Mary Kom">
+<h3>Mary Kom 🥊</h3>
+<p>Olympic medalist and six‑time world boxing champion.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Mother_Teresa_1.jpg/640px-Mother_Teresa_1.jpg" alt="Mother Teresa">
+<h3>Mother Teresa 🤍</h3>
+<p>Nobel Peace Prize winner known for humanitarian work.</p>
+</div>
+
+<div class="masonryItem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sarojini_Naidu_1912.jpg/640px-Sarojini_Naidu_1912.jpg" alt="Sarojini Naidu">
+<h3>Sarojini Naidu 🕊</h3>
+<p>Freedom fighter, poet and first woman governor of India.</p>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="slide">
+<div class="galleryCard">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Indira_Gandhi_1977.jpg">
+<div class="galleryContent">
+<h3>Indira Gandhi 🇮🇳</h3>
+<p>First female Prime Minister of India.</p>
+</div>
+</div>
+</div>
+
+<div class="slide">
+<div class="galleryCard">
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Kiran_Bedi.jpg">
+<div class="galleryContent">
+<h3>Kiran Bedi 👮‍♀️</h3>
+<p>India's first woman IPS officer.</p>
+</div>
+</div>
+</div>
+
+<div class="slide">
+<div class="galleryCard">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Savitribai_Phule.jpg">
+<div class="galleryContent">
+<h3>Savitribai Phule 📚</h3>
+<p>Pioneer of women's education.</p>
+</div>
+</div>
+</div>
+
+<div class="slide">
+<div class="galleryCard">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Sudha_Murthy.jpg">
+<div class="galleryContent">
+<h3>Sudha Murty 💡</h3>
+<p>Author and philanthropist.</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="quoteBox" id="quoteBox">
+<p id="quoteText"></p>
+<button class="closeBtn" onclick="closeQuote()">Close</button>
+</div>
+
+<div class="rangoli">🪷</div>
+<div class="lotus">🌺</div>
+
+<footer>
+<p>Happy Women's Day • Celebrating Great Women</p>
+</footer>
+
+<script>
+
+const quotes=[
+"There is no limit to what women can accomplish.",
+"Empowered women empower the world.",
+"Strong women shape strong nations.",
+"Behind every progress story are fearless women.",
+"The future belongs to courageous women."
+];
+
+function typeWriter(text,element){
+let i=0;element.innerHTML="";
+let interval=setInterval(()=>{
+element.innerHTML+=text.charAt(i);
+i++;if(i>=text.length)clearInterval(interval);
+},40);
+}
+
+function celebrate(){launchFireworks();showQuote();}
+
+function showQuote(){
+let q=quotes[Math.floor(Math.random()*quotes.length)];
+let box=document.getElementById("quoteBox");
+let text=document.getElementById("quoteText");
+box.classList.add("show");
+typeWriter(q,text);
+}
+
+function closeQuote(){document.getElementById("quoteBox").classList.remove("show")}
+
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("show")})
+});
+
+document.querySelectorAll(".scroll").forEach(el=>observer.observe(el));
+
+let slides=document.querySelectorAll(".slide");
+let index=0;
+setInterval(()=>{
+slides[index].classList.remove("active");
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+},4000);
+
+function createPetal(){
+let p=document.createElement("div");
+p.className="petal";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=4+Math.random()*4+"s";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),8000);
+}
+setInterval(createPetal,350);
+
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let particles=[];
+
+function launchFireworks(){
+for(let i=0;i<120;i++){
+particles.push({x:canvas.width/2,y:canvas.height/2,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:100});
+}}
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach((p,i)=>{
+p.x+=p.vx;p.y+=p.vy;p.life--;
+ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();
+if(p.life<=0)particles.splice(i,1);
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.getElementById("flower3d").appendChild(renderer.domElement);
+
+const geometry=new THREE.SphereGeometry(0.15,8,8);
+const material=new THREE.MeshBasicMaterial({color:0xff6fa5});
+
+let flowers=[];
+for(let i=0;i<200;i++){
+let mesh=new THREE.Mesh(geometry,material);
+mesh.position.set((Math.random()-0.5)*20,(Math.random()-0.5)*20,(Math.random()-0.5)*20);
+scene.add(mesh);
+flowers.push(mesh);
+}
+
+camera.position.z=5;
+
+function animate3D(){
+requestAnimationFrame(animate3D);
+flowers.forEach(f=>{f.rotation.x+=0.01;f.rotation.y+=0.01});
+renderer.render(scene,camera);
+}
+animate3D();
+
+/* Apple-style parallax gallery */
+window.addEventListener('scroll',()=>{
+const items=document.querySelectorAll('.masonryItem img');
+let scrollY=window.scrollY;
+items.forEach((img,i)=>{
+let speed=0.04 + (i*0.005);
+img.style.transform=`translateY(${scrollY*speed}px) scale(1.02)`;
+});
+});
+
+window.addEventListener("resize",()=>{
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+renderer.setSize(window.innerWidth,window.innerHeight);
+camera.aspect=window.innerWidth/window.innerHeight;
+camera.updateProjectionMatrix();
+});
+
+</script>
+
+</body>
+</html>
